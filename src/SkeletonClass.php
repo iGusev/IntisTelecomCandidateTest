@@ -1,6 +1,6 @@
 <?php
 
-namespace League\Skeleton;
+namespace iGusev\IntisTelecomCandidateTest;
 
 class SkeletonClass
 {

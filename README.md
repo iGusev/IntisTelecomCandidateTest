@@ -1,4 +1,4 @@
-# :package_name
+# IntisTelecomCandidateTest
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
@@ -7,17 +7,33 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-**Note:** Replace ```:author_name``` ```:author_username``` ```:author_website``` ```:author_email``` ```:vendor``` ```:package_name``` ```:package_description``` with their correct values in [README.md](README.md), [CHANGELOG.md](CHANGELOG.md), [CONTRIBUTING.md](CONTRIBUTING.md), [LICENSE.md](LICENSE.md) and [composer.json](composer.json) files, then delete this line.
+**Note:** Replace ```Ilya Gusev``` ```:author_username``` ```php-cat.com``` ```mail@igusev.ru``` ```iGusev``` ```IntisTelecomCandidateTest``` ```:package_description``` with their correct values in [README.md](README.md), [CHANGELOG.md](CHANGELOG.md), [CONTRIBUTING.md](CONTRIBUTING.md), [LICENSE.md](LICENSE.md) and [composer.json](composer.json) files, then delete this line.
 
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what
-PSRs you support to avoid any confusion with users and contributors.
+1. Разработать скрипт , принимающий курсы валют из двух источников и обновляющий данные в таблице mysql. Без использования каких либо фреймворков.
+
+Таблица:
+--------
+currency
+- symbol (код валюты)
+- rate (курс валюты)
+
+Источники:
+----------
+- http://localhost/rates1.json
+{ "rates" : [{ "symbol": "USD", "rate":1 }, { "symbol": "EUR", "rate":2 }, { "symbol": "RUR", "rate":3 }] }
+- Локальный файл rates.json, содержащий
+[ { "USD": 1 }, { "EUR": 2 }, { "RUR": 3 } ]
+- источники необходимо обеспечить самостоятельно
+- выбор варианта обновления должен осуществляться параметром при запуске скрипта из консоли (например php update.php 1/2, где 1 или 2 - выбор варианта обновления)
+
+2. Написать юнит-тесты для разработанного кода
 
 ## Install
 
 Via Composer
 
 ``` bash
-$ composer require :vendor/:package_name
+$ composer require iGusev/IntisTelecomCandidateTest
 ```
 
 ## Usage
@@ -43,28 +59,28 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) and [CONDUCT](CONDUCT.md) for details
 
 ## Security
 
-If you discover any security related issues, please email :author_email instead of using the issue tracker.
+If you discover any security related issues, please email mail@igusev.ru instead of using the issue tracker.
 
 ## Credits
 
-- [:author_name][link-author]
+- [Ilya Gusev][link-author]
 - [All Contributors][link-contributors]
 
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
 
-[ico-version]: https://img.shields.io/packagist/v/:vendor/:package_name.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/iGusev/IntisTelecomCandidateTest.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/:vendor/:package_name/master.svg?style=flat-square
-[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/:vendor/:package_name.svg?style=flat-square
-[ico-code-quality]: https://img.shields.io/scrutinizer/g/:vendor/:package_name.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/:vendor/:package_name.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/iGusev/IntisTelecomCandidateTest/master.svg?style=flat-square
+[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/iGusev/IntisTelecomCandidateTest.svg?style=flat-square
+[ico-code-quality]: https://img.shields.io/scrutinizer/g/iGusev/IntisTelecomCandidateTest.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/iGusev/IntisTelecomCandidateTest.svg?style=flat-square
 
-[link-packagist]: https://packagist.org/packages/:vendor/:package_name
-[link-travis]: https://travis-ci.org/:vendor/:package_name
-[link-scrutinizer]: https://scrutinizer-ci.com/g/:vendor/:package_name/code-structure
-[link-code-quality]: https://scrutinizer-ci.com/g/:vendor/:package_name
-[link-downloads]: https://packagist.org/packages/:vendor/:package_name
+[link-packagist]: https://packagist.org/packages/iGusev/IntisTelecomCandidateTest
+[link-travis]: https://travis-ci.org/iGusev/IntisTelecomCandidateTest
+[link-scrutinizer]: https://scrutinizer-ci.com/g/iGusev/IntisTelecomCandidateTest/code-structure
+[link-code-quality]: https://scrutinizer-ci.com/g/iGusev/IntisTelecomCandidateTest
+[link-downloads]: https://packagist.org/packages/iGusev/IntisTelecomCandidateTest
 [link-author]: https://github.com/:author_username
 [link-contributors]: ../../contributors
