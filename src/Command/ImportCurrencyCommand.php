@@ -198,7 +198,8 @@ class ImportCurrencyCommand extends Command
      */
     protected function setData(string $symbol, int $rate): bool
     {
-        return $this->connection->table(static::TABLE_CURRENCY)->updateOrInsert(['symbol' => $symbol], ['rate' => $rate]);
+        return $this->connection->table(static::TABLE_CURRENCY)
+            ->updateOrInsert(['symbol' => $symbol], ['rate' => $rate]);
     }
 
     /**
