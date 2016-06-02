@@ -22,6 +22,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Команда импорта валют
+ *
+ * Class ImportCurrencyCommand
+ * @package iGusev\IntisTelecomCandidateTest\Command
+ */
 class ImportCurrencyCommand extends Command
 {
     /**
@@ -107,7 +113,7 @@ class ImportCurrencyCommand extends Command
      *
      * @return bool
      *
-     * @throws FileNotFoundException
+     * @throws InvalidJSONException
      */
     protected function importFromFile(string $filepath): bool
     {
@@ -140,8 +146,6 @@ class ImportCurrencyCommand extends Command
      * @param string $url
      *
      * @return bool
-     *
-     * @throws FileNotFoundException
      */
     protected function importFromUrl(string $url): bool
     {
@@ -150,6 +154,15 @@ class ImportCurrencyCommand extends Command
         return true;
     }
 
+    /**
+     * Получение содержимого
+     *
+     * @param string $path
+     *
+     * @return string
+     *
+     * @throws FileNotFoundException
+     */
     protected function getData(string $path)
     {
         if (($data = @file_get_contents($path)) !== false) {
