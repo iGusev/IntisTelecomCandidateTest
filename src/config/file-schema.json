@@ -1,0 +1,15 @@
+{
+  "title": "File schema",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "patternProperties": {
+      "^\\w{3,3}$": {
+        "required": true,
+        "type": "number"
+      }
+    },
+    "additionalProperties": false
+  },
+  "uniqueItems": true
+}
