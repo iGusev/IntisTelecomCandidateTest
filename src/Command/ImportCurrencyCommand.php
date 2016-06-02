@@ -150,6 +150,8 @@ class ImportCurrencyCommand extends Command
      * @param string $url
      *
      * @return bool
+     *
+     * @throws InvalidJSONException
      */
     protected function importFromUrl(string $url): bool
     {
@@ -162,7 +164,8 @@ class ImportCurrencyCommand extends Command
 
             return true;
         }
-        return true;
+
+        throw new InvalidJSONException("Невалидный JSON в файле {$url}");
     }
 
     /**
@@ -190,6 +193,8 @@ class ImportCurrencyCommand extends Command
      * @param int $rate
      *
      * @return bool
+     *
+     * @codeCoverageIgnore
      */
     protected function setData(string $symbol, int $rate): bool
     {
