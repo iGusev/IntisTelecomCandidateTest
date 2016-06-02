@@ -1,0 +1,16 @@
+{
+  "rates": [
+    {
+      "symbol": "USD",
+      "rate": 1
+    },
+    {
+      "symbol": "EUR",
+      "rate": 2
+    },
+    {
+      "symbol": "RUR",
+      "rate": 3
+    }
+  ]
+}
