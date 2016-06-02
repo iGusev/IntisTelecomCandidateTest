@@ -9,9 +9,11 @@
 namespace Command;
 
 use iGusev\IntisTelecomCandidateTest\Command\ImportCurrencyCommand;
+use iGusev\IntisTelecomCandidateTest\InvalidJSONException;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
+use \Mockery;
 
 class ImportCurrencyCommandTest extends \PHPUnit_Framework_TestCase
 {
@@ -19,9 +21,10 @@ class ImportCurrencyCommandTest extends \PHPUnit_Framework_TestCase
     const SUCCESS_IMPORT = '/Импорт успешно завершен/';
     const PARAMS_NOT_FOUND = '/Отсутствуют обязательные параметры/';
     const FILE_NOT_FOUND = '/Файл (.*) недоступен/';
+    const INVALID_JSON = '/Невалидный JSON в файле/';
 
     /**
-     * @var Command
+     * @var Mockery\MockInterface|Command
      */
     protected $command;
     /**
@@ -59,8 +62,10 @@ class ImportCurrencyCommandTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $mock = Mockery::mock(ImportCurrencyCommand::class.'[setData]', [null])->shouldAllowMockingProtectedMethods();
+
         $application = new Application();
-        $application->add(new ImportCurrencyCommand());
+        $application->add($mock);
 
         $this->command = $application->find('import:currency');
         $this->commandTester = new CommandTester($this->command);
@@ -68,7 +73,10 @@ class ImportCurrencyCommandTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
+        unset($this->command);
         unset($this->commandTester);
+
+        Mockery::close();
     }
 
     public function testExecuteWithoutArguments()
@@ -117,6 +125,7 @@ class ImportCurrencyCommandTest extends \PHPUnit_Framework_TestCase
      */
     public function testExecuteWithFile($correctFilePath)
     {
+        $this->command->shouldDeferMissing('setData')->shouldReceive('setData')->andReturn(true);
         $this->commandTester->execute([
             'command' => $this->command->getName(),
             '--file' => realpath($correctFilePath)
@@ -124,4 +133,44 @@ class ImportCurrencyCommandTest extends \PHPUnit_Framework_TestCase
 
         $this->assertRegExp(static::SUCCESS_IMPORT, $this->commandTester->getDisplay());
     }
+
+    /**
+     * @param $correctFilePath
+     *
+     * @dataProvider correctUrlPathProvider
+     */
+    public function testExecuteWithUrl($correctFilePath)
+    {
+        $this->command->shouldDeferMissing('setData')->shouldReceive('setData')->andReturn(true);
+        $this->commandTester->execute([
+            'command' => $this->command->getName(),
+            '--url' => realpath($correctFilePath)
+        ]);
+
+        $this->assertRegExp(static::SUCCESS_IMPORT, $this->commandTester->getDisplay());
+    }
+
+    public function testInvalidJsonException1()
+    {
+        $this->command->shouldDeferMissing('setData')->shouldReceive('setData')->andReturn(true);
+        $this->commandTester->execute([
+            'command' => $this->command->getName(),
+            '--file' => realpath('tests/fixtures/invalid-rates.json')
+        ]);
+
+        $this->assertRegExp(static::INVALID_JSON, $this->commandTester->getDisplay());
+    }
+
+    public function testInvalidJsonException2()
+    {
+        $this->command->shouldDeferMissing('setData')->shouldReceive('setData')->andReturn(true);
+        $this->commandTester->execute([
+            'command' => $this->command->getName(),
+            '--url' => realpath('tests/fixtures/invalid-rates.json')
+        ]);
+
+        $this->assertRegExp(static::INVALID_JSON, $this->commandTester->getDisplay());
+    }
+
+
 }
