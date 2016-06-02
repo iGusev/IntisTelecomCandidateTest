@@ -35,6 +35,9 @@ class ImportCurrencyCommand extends Command
      */
     const TABLE_CURRENCY = 'currency';
 
+    const FILE_SCHEMA = 'src/config/file-schema.json';
+    const URL_SCHEMA = 'src/config/url-schema.json';
+
     /**
      * @var Connection
      */
@@ -117,27 +120,17 @@ class ImportCurrencyCommand extends Command
      */
     protected function importFromFile(string $filepath): bool
     {
-        $data = $this->getData($filepath);
-        $data = json_decode($data);
+        $data = json_decode($this->getData($filepath));
 
-
-        $refResolver = new RefResolver(new UriRetriever(), new UriResolver());
-        $schema = $refResolver->resolve('file://' . realpath('src/config/file-schema.json'));
-
-        // Validate
-        $validator = new Validator();
-        $validator->check($data, $schema);
-
-        if ($validator->isValid()) {
+        if ($this->validateJson($data, static::FILE_SCHEMA)) {
             foreach ($data as $item) {
-                $this->connection->table(static::TABLE_CURRENCY)->updateOrInsert(['symbol' => key($item)], ['rate' => reset($item)]);
+                $this->setData(key($item), reset($item));
             }
 
             return true;
         }
 
         throw new InvalidJSONException("Невалидный JSON в файле {$filepath}");
-
     }
 
     /**
@@ -149,8 +142,16 @@ class ImportCurrencyCommand extends Command
      */
     protected function importFromUrl(string $url): bool
     {
-        $data = $this->getData($url);
+        $data = json_decode($this->getData($url));
 
+        if ($this->validateJson($data, static::URL_SCHEMA)) {
+            foreach ($data->rates as $item) {
+                
+                $this->setData($item->symbol, $item->rate);
+            }
+
+            return true;
+        }
         return true;
     }
 
@@ -170,5 +171,21 @@ class ImportCurrencyCommand extends Command
         }
 
         throw new FileNotFoundException("Файл {$path} недоступен");
+    }
+
+    protected function setData(string $symbol, int $rate): bool
+    {
+        return $this->connection->table(static::TABLE_CURRENCY)->updateOrInsert(['symbol' => $symbol], ['rate' => $rate]);
+    }
+
+    protected function validateJson(\stdClass $data, string $schemaPath)
+    {
+        $refResolver = new RefResolver(new UriRetriever(), new UriResolver());
+        $schema = $refResolver->resolve('file://' . realpath($schemaPath));
+
+        $validator = new Validator();
+        $validator->check($data, $schema);
+
+        return $validator->isValid();
     }
 }
