@@ -35,7 +35,14 @@ class ImportCurrencyCommand extends Command
      */
     const TABLE_CURRENCY = 'currency';
 
+    /**
+     * Путь к схеме импорта из файлов
+     */
     const FILE_SCHEMA = 'src/config/file-schema.json';
+
+    /**
+     * Путь к схеме импорта из урлов
+     */
     const URL_SCHEMA = 'src/config/url-schema.json';
 
     /**
@@ -54,15 +61,15 @@ class ImportCurrencyCommand extends Command
                 'file',
                 'f',
                 InputOption::VALUE_REQUIRED,
-                'Если установлен, будет произведен
-                импорт из указанного файла'
+                'Если установлен, будет произведен ' .
+                'импорт из указанного файла'
             )
             ->addOption(
                 'url',
                 'u',
                 InputOption::VALUE_REQUIRED,
-                'Если установлен, будет произведен 
-                импорт из указанного url-адреса'
+                'Если установлен, будет произведен ' .
+                'импорт из указанного url-адреса'
             );
 
         $manager = new Manager();
@@ -96,14 +103,18 @@ class ImportCurrencyCommand extends Command
                 $this->importFromFile($input->getOption('file'));
                 $output->writeln($input->getOption('file'));
             }
-
             if ($input->getOption('url')) {
                 $this->importFromUrl($input->getOption('url'));
                 $output->writeln($input->getOption('url'));
             }
 
-
-            $output->writeln('<info>Импорт успешно завершен</info>');
+            if (!$input->getOption('file') && !$input->getOption('url')) {
+                $output->writeln("<question>Отсутствуют обязательные параметры. " .
+                    "Для вызова справки используйте:\n" .
+                    "bin/console help import:currency</question>");
+            } else {
+                $output->writeln('<info>Импорт успешно завершен</info>');
+            }
         } catch (BaseException $e) {
             $output->writeln("<error>{$e->getMessage()}</error>");
         }
@@ -146,7 +157,6 @@ class ImportCurrencyCommand extends Command
 
         if ($this->validateJson($data, static::URL_SCHEMA)) {
             foreach ($data->rates as $item) {
-                
                 $this->setData($item->symbol, $item->rate);
             }
 
@@ -173,12 +183,28 @@ class ImportCurrencyCommand extends Command
         throw new FileNotFoundException("Файл {$path} недоступен");
     }
 
+    /**
+     * Запись в бд
+     *
+     * @param string $symbol
+     * @param int $rate
+     *
+     * @return bool
+     */
     protected function setData(string $symbol, int $rate): bool
     {
         return $this->connection->table(static::TABLE_CURRENCY)->updateOrInsert(['symbol' => $symbol], ['rate' => $rate]);
     }
 
-    protected function validateJson(\stdClass $data, string $schemaPath)
+    /**
+     * Валидация файлов по json-схеме
+     *
+     * @param $data
+     * @param string $schemaPath
+     *
+     * @return bool
+     */
+    protected function validateJson($data, string $schemaPath)
     {
         $refResolver = new RefResolver(new UriRetriever(), new UriResolver());
         $schema = $refResolver->resolve('file://' . realpath($schemaPath));
