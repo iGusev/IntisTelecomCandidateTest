@@ -1,13 +1,8 @@
 # IntisTelecomCandidateTest
 
-[![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
 [![Build Status][ico-travis]][link-travis]
-[![Coverage Status][ico-scrutinizer]][link-scrutinizer]
 [![Quality Score][ico-code-quality]][link-code-quality]
-[![Total Downloads][ico-downloads]][link-downloads]
-
-**Note:** Replace ```Ilya Gusev``` ```:author_username``` ```php-cat.com``` ```mail@igusev.ru``` ```iGusev``` ```IntisTelecomCandidateTest``` ```:package_description``` with their correct values in [README.md](README.md), [CHANGELOG.md](CHANGELOG.md), [CONTRIBUTING.md](CONTRIBUTING.md), [LICENSE.md](LICENSE.md) and [composer.json](composer.json) files, then delete this line.
 
 1. Разработать скрипт , принимающий курсы валют из двух источников и обновляющий данные в таблице mysql. Без использования каких либо фреймворков.
 
